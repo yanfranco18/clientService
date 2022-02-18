@@ -2,16 +2,17 @@ package com.client.service;
 
 import com.client.models.Client;
 import com.client.repository.ClientDao;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@RequiredArgsConstructor
 @Service
 public class ClientServiceImpl implements IClientService{
 
-    @Autowired
-    private ClientDao clientDao;
+    private final ClientDao clientDao;
 
     @Override
     public Flux<Client> findAll() {
@@ -24,8 +25,8 @@ public class ClientServiceImpl implements IClientService{
     }
 
     @Override
-    public Mono<Void> delete(Client client) {
-        return clientDao.delete(client);
+    public Mono<Void> delete(String id) {
+        return clientDao.deleteById(id);
     }
 
     @Override

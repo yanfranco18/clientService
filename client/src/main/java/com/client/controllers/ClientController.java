@@ -53,15 +53,11 @@ public class ClientController {
 
     //Metodo para eliminar
     @DeleteMapping("/{id}")
-    public Mono<ResponseEntity<Void>> delete(@PathVariable String id){
-        //buscamos el id
-        return clientService.findById(id)
-                //eliminamos el client encontrado, a traves de un flatMap
-                .flatMap(p -> { return clientService.delete(p)
-                        //Convertir la respuesta Mono<Void> en un entity de tipo client, usando mono.just
-                        .then(Mono.just(new ResponseEntity<Void>(HttpStatus.NO_CONTENT)));
-                    //Validamos si el client existe en la base de datos
-                }).defaultIfEmpty(new ResponseEntity<Void>(HttpStatus.NOT_FOUND));
+    public Mono<ResponseEntity<Void>> delete (@PathVariable String id){
+
+        return clientService.delete(id)
+                .then(Mono.just(new ResponseEntity<Void>(HttpStatus.NO_CONTENT)))
+                .defaultIfEmpty(new ResponseEntity<Void>(HttpStatus.NOT_FOUND));
     }
 
     //Metodo para editar, pasamos por el requestBody el client a modificar
@@ -102,6 +98,16 @@ public class ClientController {
                         .contentType(MediaType.APPLICATION_JSON)
                         //Y pasamos el cliente creado
                         .body(p));
+    }
+
+    //metodo buscar por id
+    @GetMapping("/getById/{id}")
+    public Mono<ResponseEntity<Client>> getById(@PathVariable String id){
+        return clientService.findById(id)
+                .map(p -> ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(p))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     //metodo para manejar el error

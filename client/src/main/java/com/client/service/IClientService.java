@@ -10,7 +10,7 @@ public interface IClientService {
 
     public Mono<Client> save(Client client);
 
-    public Mono<Void> delete(Client client);
+    public Mono<Void> delete(String id);
 
     public Mono<Client> findById(String id);
 
