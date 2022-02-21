@@ -76,8 +76,8 @@ class ClientApplicationTests {
 	@Test
 	public void findByIdClientTest() throws Exception{
 
-		Mono<Client> products = Mono.just(Data.getList());
-		when(service.findById(any())).thenReturn(products);
+		Mono<Client> cli = Mono.just(Data.getList());
+		when(service.findById(any())).thenReturn(cli);
 
 		Flux<Client> respBody = webTestClient.get().uri("/clients/getById/12233d")
 				.accept(MediaType.APPLICATION_JSON)
@@ -93,7 +93,7 @@ class ClientApplicationTests {
 	}
 
 	@Test
-	public void searchTypeProductTest() throws Exception{
+	public void searchTypeClientTest() throws Exception{
 		Flux<Client> cli = Flux.just(Data.getList());
 		when(service.findByTypeClient(any())).thenReturn(cli);
 
