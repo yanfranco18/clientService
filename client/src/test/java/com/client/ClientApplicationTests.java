@@ -15,8 +15,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.Date;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -33,8 +31,7 @@ class ClientApplicationTests {
 	@Test
 	void getClientTest() {
 
-		Flux<Client> cli = Flux.just(new Client("12233d", "Empresa Agp", "Empresarial", "24353456765", "4564567",new Date(2022-02-16)),
-				new Client("12245f", "Yan Loayza", "Personal", "45061936","987654324",new Date(2022-02-16)));
+		Flux<Client> cli = Flux.just(Data.getList());
 		when(service.findAll()).thenReturn(cli);
 
 		Flux<Client> respBody = webTestClient.get().uri("/clients")
@@ -46,15 +43,14 @@ class ClientApplicationTests {
 
 		StepVerifier.create(respBody)
 				.expectSubscription()
-				.expectNext(new Client("12233d", "Empresa Agp", "Empresarial", "24353456765", "4564567",new Date(2022-02-16)))
-				.expectNext(new Client("12245f", "Yan Loayza", "Personal", "45061936","987654324",new Date(2022-02-16)))
+				.expectNext(Data.getList())
 				.verifyComplete();
 	}
 
 	@Test
 	public void saveClientTest(){
 
-		Client cli = new Client("12245f", "Junit - Mockito", "Empresarial", "45888886","900654324",new Date());
+		Client cli = Data.getList();
 
 		when(service.save(cli)).thenReturn(Mono.just(cli));
 
@@ -80,7 +76,7 @@ class ClientApplicationTests {
 	@Test
 	public void findByIdClientTest() throws Exception{
 
-		Mono<Client> products = Mono.just(new Client("12233d", "Empresa Agp", "Empresarial", "24353456765", "4564567",new Date()));
+		Mono<Client> products = Mono.just(Data.getList());
 		when(service.findById(any())).thenReturn(products);
 
 		Flux<Client> respBody = webTestClient.get().uri("/clients/getById/12233d")
@@ -98,11 +94,10 @@ class ClientApplicationTests {
 
 	@Test
 	public void searchTypeProductTest() throws Exception{
-		Flux<Client> cli = Flux.just(new Client("12233d", "Empresa Agp", "Empresarial", "24353456765", "4564567",new Date(2022-02-16)),
-				new Client("12245f", "Yan Loayza", "Personal", "45061936","987654324",new Date(2022-02-16)));
+		Flux<Client> cli = Flux.just(Data.getList());
 		when(service.findByTypeClient(any())).thenReturn(cli);
 
-		Flux<Client> respBody = webTestClient.get().uri("/clients/search/Personal")
+		Flux<Client> respBody = webTestClient.get().uri("/clients/search/Empresarial")
 				.accept(MediaType.APPLICATION_JSON)
 				.exchange()
 				.expectStatus().isOk()
@@ -111,7 +106,7 @@ class ClientApplicationTests {
 
 		StepVerifier.create(respBody)
 				.expectSubscription()
-				.expectNextMatches(c -> c.getTypeClient().equals("Personal"))
+				.expectNextMatches(c -> c.getTypeClient().equals("Empresarial"))
 				.expectComplete();
 	}
 

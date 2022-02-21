@@ -39,6 +39,8 @@ public class ClientController {
     }
 
     //Metodo listar, usando response entity para manejar la respuesta del status y la respuesta del body
+    @CircuitBreaker(name="clients", fallbackMethod = "fallback")
+    @TimeLimiter(name="clients")
     @GetMapping
     public Mono<ResponseEntity<Flux<Client>>> getClient(){
         log.info("iniciando lista");
@@ -52,6 +54,8 @@ public class ClientController {
     }
 
     //Metodo para eliminar
+    @CircuitBreaker(name="clients", fallbackMethod = "fallback")
+    @TimeLimiter(name="clients")
     @DeleteMapping("/{id}")
     public Mono<ResponseEntity<Void>> delete (@PathVariable String id){
 
@@ -61,6 +65,8 @@ public class ClientController {
     }
 
     //Metodo para editar, pasamos por el requestBody el client a modificar
+    @CircuitBreaker(name="clients", fallbackMethod = "fallback")
+    @TimeLimiter(name="clients")
     @PutMapping("/{id}")
     public Mono<ResponseEntity<Client>> edit(@RequestBody Client clients, @PathVariable String id){
         //buscamos el id para obtener el client
@@ -84,6 +90,8 @@ public class ClientController {
     }
 
     //metodo crear
+    @CircuitBreaker(name="clients", fallbackMethod = "fallback")
+    @TimeLimiter(name="clients")
     @PostMapping
     public Mono<ResponseEntity<Client>> create(@RequestBody Client clients){
         //validamos la fecha en caso venga fecha, asigamos la fecha
@@ -101,6 +109,8 @@ public class ClientController {
     }
 
     //metodo buscar por id
+    @CircuitBreaker(name="clients", fallbackMethod = "fallback")
+    @TimeLimiter(name="clients")
     @GetMapping("/getById/{id}")
     public Mono<ResponseEntity<Client>> getById(@PathVariable String id){
         return clientService.findById(id)
